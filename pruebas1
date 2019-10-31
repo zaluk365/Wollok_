@@ -1,0 +1,86 @@
+object wollok {
+
+	var property lista = [new Carta(1), new Carta(2), new Carta(3), new Carta(4)]
+	
+	method permutar(numero, coleccion){
+		if(coleccion.any({x => x > coleccion.size() or coleccion.size() < x}))
+			return false
+		var listaNueva = lista.copy()
+		listaNueva.add(numero)
+		return (1 .. listaNueva.size()).map({x => listaNueva.subList(0, x)})
+	}
+	method borrarColeccion(coleccion){
+		var coleccionAux = coleccion.copy()
+		coleccionAux = []
+		return coleccionAux
+	}
+}
+
+object wollok2 {
+
+	var property numeritos = [1,2,3,4]
+	var property elementosUsados = []
+	
+	method permutar(coleccion){
+		var coleccionAux = coleccion.copy()
+		var contadorSizeGrupos = [1..coleccion.size()]
+		var coleccionOut = []
+		contadorSizeGrupos.forEach({cont=>
+			coleccion.forEach({num => 
+			elementosUsados.add(coleccion.get(num)) //Agrego los concatenados eh?
+			//coleccionAux.removeAllSuchThat({elemento => self.yaUsado(elemento)})
+			coleccionOut.add(coleccionAux.subList(0, cont))
+			elementosUsados.add(coleccionAux.subList(num, cont))
+			coleccionAux = coleccion.copy()
+			})
+		})
+		return coleccionOut
+	}
+	method permutarUnNumero(coleccion){
+		var coleccionAux = coleccion.copy()
+		var contadorSizeGrupos = [1..coleccion.size()]
+		var coleccionOut = []
+		var grupo = []
+		var numeroAPermutar
+		contadorSizeGrupos.forEach({cont=>
+			grupo.add(coleccion.get(cont))
+			elementosUsados = []
+			coleccion.forEach({
+				coleccionAux.filter({x=> x == grupo.anyOne()})
+				numeroAPermutar = coleccionAux.anyOne({x => x != elementosUsados})
+				coleccionOut.add(grupo + numeroAPermutar)
+				elementosUsados.add(numeroAPermutar)
+			})
+		})
+	}
+		
+		//coleccion.sortBy{l1,l2 => }
+		//(0 .. coleccion.size()).map({x => listaNueva.subList(0, x)})
+		
+			//coleccion.sortBy{l1,l2 => self.yaUsado(l1) < self.yaUsado(l2)} INTERESANTE PERO SOS PUTO
+			//coleccionAux.add(coleccion.map({coleccion.subList(0, num)}))
+
+	method yaUsado(numero){ //OBSOLETO
+		return(elementosUsados.anyOne() == numero)
+	}
+	
+
+
+}
+class Carta{
+	var property numero
+	constructor(_numero){ numero = _numero }
+	method getNum(){
+		return numero
+	}
+}
+object sortearPrueba{
+	var numeros = [1,2,3]
+	
+	method mayorMenor(){
+		return numeros.sortBy { el1, el2 => el1 > el2 }
+	}
+	method menorMayor(){
+		return numeros.sortBy { el1, el2 => el1 < el2 }
+	}
+}
